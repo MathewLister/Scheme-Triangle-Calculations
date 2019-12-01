@@ -1,0 +1,77 @@
+;----------------------------------------------
+(define(make-point x-cor y-cor)
+  (cons x-cor y-cor))
+
+(define(get-x point)
+  (car point))
+
+(define(get-y point)
+  (cdr point))
+  
+(define (round-off z n)
+  (let ((power (expt 10 n)))
+    (/ (round (* power z)) power)))  
+;-----------------------------------------------
+(define(is-line point1 point2 point3)
+  (let(
+	(a (* (get-x point1) (- (get-y point2) (get-y point3))))
+	(b (* (get-x point2) (- (get-y point3) (get-y point1))))
+	(c (* (get-x point3) (- (get-y point1) (get-y point2)))))
+  (if (= (+ a b c) 0) #t #f)))
+
+(define(distance point1 point2)
+  (let ((x (+ (expt (- (get-x point1) (get-x point2)) 2) (expt (- (get-y point1) (get-y point2)) 2)))) (sqrt x)))
+
+
+(define(perimeter point1 point2 point3)
+  (if (equal? (is-line point1 point2 point3) #f)
+		(+ (distance point1 point2) (distance point2 point3) (distance point1 point3))
+	(display "NOT A TRIANGLE")))
+
+(define (area point1 point2 point3)
+  (if (equal? (is-line point1 point2 point3) #f)
+    (abs (/ (+ (* (- (get-y point2) (get-y point3)) (get-x point1)) (* (- (get-y point3) (get-y point1)) (get-x point2)) (* (- (get-y point1) (get-y point2)) (get-x point3))) 2))
+    (display "NOT A TRIANGLE")))
+			
+(define(calculate-triangle point1 point2 point3)
+	(if (equal? (is-line point1 point2 point3) #t)
+    (display "NOT A TRIANGLE")
+    (let(
+         (a1 (acos (/ (- (+ (expt (distance point2 point3) 2) (expt (distance point1 point3) 2)) (expt (distance point1 point2) 2)) (* 2 (distance point2 point3) (distance point1 point3)))))
+         (b1 (acos (/ (- (+ (expt (distance point1 point2) 2) (expt (distance point1 point3) 2)) (expt (distance point2 point3) 2)) (* 2 (distance point1 point2) (distance point1 point3)))))
+         (c1 (acos (/ (- (+ (expt (distance point1 point2) 2) (expt (distance point2 point3) 2)) (expt (distance point1 point3) 2)) (* 2 (distance point1 point2) (distance point2 point3))))))
+	
+        (display "Side 1 = ")
+        (display (round-off (distance point1 point2) 5))
+        (display "\n")
+        (display "Side 2 = ")
+        (display (round-off (distance point2 point3) 5))
+        (display "\n")
+        (display "Side 3 = ")
+        (display (round-off (distance point1 point3) 5))
+        (display "\n")
+        (display "Perimeter = ")
+        (display (round-off (perimeter point1 point2 point3) 5))
+        (display "\n")
+        (display "Area = ")
+        (display (area point1 point2 point3))
+        (display "\n")
+		
+        (display "Angle 1 = ")
+        (display (round-off a1 5))
+        (display "\t")
+        (display (round-off (* a1 (/ 180 (acos -1))) 5))
+        (display "\n")
+        (display "Angle 2 = ")
+        (display (round-off b1 5))
+        (display "\t")
+        (display (round-off (* b1 (/ 180 (acos -1))) 5))
+        (display "\n")
+        (display "Angle 3 = ")
+        (display (round-off c1 5))
+        (display "\t")
+        (display (round-off (* c1 (/ 180 (acos -1))) 5))
+        (display "\n")
+	) 
+  )
+)
